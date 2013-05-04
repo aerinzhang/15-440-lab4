@@ -16,7 +16,7 @@ def distance(p1, p2):
 def getInitialCentroids(points, k):
     ntries = int (2 + math.log(k))
     n = len(points)
-    centers = [points[random.randint(0, n-1)]]  
+    centroids = [points[random.randint(0, n-1)]]  
     D       = [distance(point, centers[0])**2 for point in points] 
     Dsum    = reduce (lambda x, y : x + y, D)  
     for _ in xrange(k - 1):  
@@ -33,8 +33,8 @@ def getInitialCentroids(points, k):
             if bestDsum < 0 or tmpDsum < bestDsum:  
                 bestDsum, bestIdx  = tmpDsum, i  
         Dsum = bestDsum  
-        centers.append (points[bestIdx])  
-    return centers  
+        centroids.append (points[bestIdx])  
+    return centroids
 
 # compute average centroid from points in a cluster
 def getNewCentroids(clusters):
@@ -79,6 +79,8 @@ def kMeans(k, e, i, o):
         pointStr = line.strip().split(' ')
         point = (float(pointStr[0]), float(pointStr[1]))
         points.append(point)
+    f.close()
+    # run kMeans
     initialCentroids = getInitialCentroids(points, k)
     oldCentroids = initialCentroids
     clusters = getClusters(points, initialCentroids)
@@ -87,7 +89,10 @@ def kMeans(k, e, i, o):
         oldCentroids = copyOf(newCentroids)
         clusters = getClusters(points, newCentroids)
         newCentroids = getNewCentroids(clusters)
-    return newCentroids
-     
-#kMeans(10, 0.0001, "o.txt", "output.txt")
+    fo = open(o, "w+") 
+    for c in newCentroids:
+        fo.write("%f %f\n" % (c[0], c[1]))
+    fo.close()
+    
+#kMeans(3, 0.0001, "input.txt", "output.txt")
 kMeans(opts.k, opts.e, opts.input, opts.output)
