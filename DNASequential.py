@@ -40,18 +40,19 @@ def getNewCentroids(clusters):
     centroids = []
     for strands in clusters:
         centroid = ""
-        for i in xrange(len(strands[0])):
-            numA, numG, numC, numT = 0, 0, 0, 0
-            for strand in strands:
-                if strand[i] == "A": numA += 1
-                elif strand[i] == "G": numG += 1
-                elif strand[i] == "C": numC +=1
-                else: numT += 1
-            if (max(numA, numG, numC, numT) == numA): centroid += "A"
-            elif (max(numA, numG, numC, numT) == numG): centroid += "G"
-            elif (max(numA, numG, numC, numT) == numC): centroid += "C"
-            else: centroid += "T"
-        centroids.append(centroid)
+        if (len(strands) > 0):
+            for i in xrange(len(strands[0])):
+                numA, numG, numC, numT = 0, 0, 0, 0
+                for strand in strands:
+                    if strand[i] == "A": numA += 1
+                    elif strand[i] == "G": numG += 1
+                    elif strand[i] == "C": numC +=1
+                    else: numT += 1
+                if (max(numA, numG, numC, numT) == numA): centroid += "A"
+                elif (max(numA, numG, numC, numT) == numG): centroid += "G"
+                elif (max(numA, numG, numC, numT) == numC): centroid += "C"
+                else: centroid += "T"
+            centroids.append(centroid)
     return centroids
 
 # compute dna clusters
@@ -70,7 +71,7 @@ def getClusters(strands, centroids):
 
 # compute maximum change in centroids
 def diffCentroids(oldCentroids, newCentroids):
-    k = len(oldCentroids)
+    k = min(len(oldCentroids), len(newCentroids))
     return max([distance(oldCentroids[c], newCentroids[c]) for c in xrange(k)])
 
 # make deep copy of centroids list
@@ -100,6 +101,7 @@ def kMeans(k, e, i, o):
         fo.write(c + "\n")
     fo.close()
      
-#kMeans(10, 0.0001, "dna.txt", "output.txt")
+#kMeans(10, 0.0001, "input.txt", "output.txt")
+
 if __name__ == "__main__":
     kMeans(opts.k, opts.e, opts.input, opts.output)
