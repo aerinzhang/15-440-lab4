@@ -48,8 +48,6 @@ def createCentroids(k, l):
 	diffRad = int(l/(k**(0.5)))
 	while(len(cList) < k):
 		newCentroid = (createStrand(l), random.randint(1, diffRad))
-		print "in-loop", newCentroid
-		print "cList", cList
 		if (checkCentroids(cList, newCentroid)):
 			cList += [newCentroid]
 	return cList
