@@ -5,7 +5,7 @@ import PointSequential as PS
 
 optparser = optparse.OptionParser()
 optparser.add_option("-k", "--k", dest="k", type="int", help="number of clusters")
-optparser.add_option("-e", "--e", dest="e", type="int", help="threshold for convergence")
+optparser.add_option("-e", "--e", dest="e", type="float", help="threshold for convergence")
 optparser.add_option("-i", "--input", dest="input", help="input file path")
 optparser.add_option("-o", "--output", dest="output", help="output file path")
 (opts, _) = optparser.parse_args()
