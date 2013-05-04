@@ -53,12 +53,13 @@ def getInitialCentroids(points, k):
 	print cen
 	return cen
 
+#parallel kmeans
 def kMeans(k, e, i, o):
 	comm = MPI.COMM_WORLD
 	rank = comm.Get_rank()
 	size = comm.Get_size()
 
-	#rank = 0 divides the points and scatters to each data
+	#rank = 0 divides the points and scatters to each node
 	if rank == 0:
 		f = open(i, "r")
 		points = []
@@ -74,15 +75,16 @@ def kMeans(k, e, i, o):
 	else:
 		newCen = None
 		chunk = None
+	# every other node gets the broadcasted newCen from root
 	newCen = comm.bcast(newCen, root=0)
+	# every node gets its chunk of data
 	chunk = comm.scatter(chunk, root=0)
-	# every other node gets the broadcasted list from ranko
-	# each node then computes membership based on that centroids
 	oldCen = [(0,0)]*k
 	membership = [-1]*len(chunk)
 	allMembership = []
 	while(PS.diffCentroids(oldCen, newCen) > e):
 		oldCen = newCen[:]
+		# each node then computes membership based on the current centroids
 		membership = assignMembership(chunk, newCen)
 		allMembers = comm.gather(membership, root=0)
 		#flatten the list of lists
@@ -93,6 +95,7 @@ def kMeans(k, e, i, o):
 				# based on newmembership calculate new centroids 
 				allMembership.extend(member)
 			newCen = updateCentroids(allMembership, k)
+		#broadcast newCentroids to every node
 		newCen = comm.bcast(newCen, root=0)
 
 	#write output file
