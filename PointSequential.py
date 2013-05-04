@@ -3,12 +3,12 @@ import optparse
 import math
 import random
 
-##optparser = optparse.OptionParser()
-##optparser.add_option("-k", "--k", dest="k", type="int", help="number of clusters")
-##optparser.add_option("-e", "--e", dest="e", type="int", help="threshold for convergence")
-##optparser.add_option("-i", "--input", dest="input", help="input file path")
-##optparser.add_option("-o", "--output", dest="output", help="output file path")
-##(opts, _) = optparser.parse_args()
+optparser = optparse.OptionParser()
+optparser.add_option("-k", "--k", dest="k", type="int", help="number of clusters")
+optparser.add_option("-e", "--e", dest="e", type="int", help="threshold for convergence")
+optparser.add_option("-i", "--input", dest="input", help="input file path")
+optparser.add_option("-o", "--output", dest="output", help="output file path")
+(opts, _) = optparser.parse_args()
 
 def distance(p1, p2):
     return (((p1[0] - p2[0]) ** 2) + ((p1[1] - p2[1]) ** 2)) ** 0.5
@@ -87,6 +87,7 @@ def kMeans(k, e, i, o):
         oldCentroids = copyOf(newCentroids)
         clusters = getClusters(points, newCentroids)
         newCentroids = getNewCentroids(clusters)
+    return newCentroids
      
 #kMeans(10, 0.0001, "o.txt", "output.txt")
-#kMeans(opts.k, opts.e, opts.input, opts.output)
+kMeans(opts.k, opts.e, opts.input, opts.output)
