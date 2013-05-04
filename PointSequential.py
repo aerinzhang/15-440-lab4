@@ -94,8 +94,9 @@ def kMeans(k, e, i, o):
         fo.write("%f %f\n" % (c[0], c[1]))
     fo.close()
     
-#kMeans(3, 0.0001, "input.txt", "output.txt")
 
 if __name__ == "__main__":
     import cProfile
-    cProfile.run('kMeans(opts.k, opts.e, opts.input, opts.output)')
+    #cProfile.run('kMeans(opts.k, opts.e, opts.input, opts.output)')
+    cProfile.run("kMeans(3, 0.0001, 'Pointk3p100000.txt', 'tst.txt')")
+
