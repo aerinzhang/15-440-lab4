@@ -97,4 +97,5 @@ def kMeans(k, e, i, o):
 #kMeans(3, 0.0001, "input.txt", "output.txt")
 
 if __name__ == "__main__":
-    kMeans(opts.k, opts.e, opts.input, opts.output)
+    import cProfile
+    cProfile.run('kMeans(opts.k, opts.e, opts.input, opts.output)')
