@@ -63,7 +63,7 @@ def getClusters(points, centroids):
 
 # compute maximum change in centroids
 def diffCentroids(oldCentroids, newCentroids):
-    k = len(oldCentroids)
+    k = min(len(oldCentroids), len(newCentroids))
     return max([distance(oldCentroids[c], newCentroids[c]) for c in xrange(k)])
 
 # make deep copy of centroids list
