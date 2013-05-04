@@ -63,7 +63,7 @@ def kMeans(k, e, i, o):
             strands.append(strand)
         f.close()
         chunkSize = len(strands)/size
-        chunk = [strands[i*chunkSize: min((i+1)*chunkSize, len(points))] for i in range(size)]
+        chunk = [strands[i*chunkSize: min((i+1)*chunkSize, len(strands))] for i in range(size)]
         #pick centroids and then broadcast
         newCen = DS.getInitialCentroids(strands, k)
     else:
@@ -98,7 +98,7 @@ def kMeans(k, e, i, o):
     if (rank == 0):
         fo = open(o, "w+")
         for c in newCen:
-            fo.write(c)
+            fo.write(c+'\n')
         fo.close()
 
 if __name__ == "__main__":
