@@ -3,12 +3,12 @@ import optparse
 from mpi4py import MPI
 import PointSequential as PS
 
-optparser = optparse.OptionParser()
-optparser.add_option("-k", "--k", dest="k", type="int", help="number of clusters")
-optparser.add_option("-e", "--e", dest="e", type="float", help="threshold for convergence")
-optparser.add_option("-i", "--input", dest="input", help="input file path")
-optparser.add_option("-o", "--output", dest="output", help="output file path")
-(opts, _) = optparser.parse_args()
+##optparser = optparse.OptionParser()
+##optparser.add_option("-k", "--k", dest="k", type="int", help="number of clusters")
+##optparser.add_option("-e", "--e", dest="e", type="float", help="threshold for convergence")
+##optparser.add_option("-i", "--input", dest="input", help="input file path")
+##optparser.add_option("-o", "--output", dest="output", help="output file path")
+##(opts, _) = optparser.parse_args()
 
 def assignMembership(points, centroids):
 	k = len(centroids)
@@ -88,6 +88,11 @@ def run(k, e, i, o):
 		fo.close()
 	return 42
 
-if __name__ == "__main__":
-	run(3, 0.0001, 'Pointk3p100000.txt', 'tst.txt')
-	#run(opts.k, opts.e, opts.input, opts.output)
+
+run(3, 0.0001, 'inputPoints.txt', 'output.txt')
+
+#run(3, 0.0001, 'Pointk3p100000.txt', 'tst.txt')
+
+##if __name__ == "__main__":
+##	import cProfile
+##	cProfile.run("run(opts.k, opts.e, opts.input, opts.output)")
