@@ -95,4 +95,6 @@ def kMeans(k, e, i, o):
     fo.close()
     
 #kMeans(3, 0.0001, "input.txt", "output.txt")
-kMeans(opts.k, opts.e, opts.input, opts.output)
+
+if __name__ == "__main__":
+    kMeans(opts.k, opts.e, opts.input, opts.output)

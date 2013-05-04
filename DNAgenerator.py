@@ -2,12 +2,13 @@
 import optparse
 import sys
 import random
+import math
 
 optparser = optparse.OptionParser()
 optparser.add_option("-k", "--value-of-k", dest="kValue", type="int", help="number of clusters")
 optparser.add_option("-p", "--value-of-p", dest="pValue", type="int", help="number of data in a cluster")
 optparser.add_option("-o", "--output", dest="output", default="output.txt", help="location of output file")
-optparser.add_option("-l", "--length-of-DNA", dest="dLength", default=20, type="int", help="length of DNA strand")
+optparser.add_option("-l", "--length-of-DNA", dest="dLength", default=50, type="int", help="length of DNA strand")
 (opts, _) = optparser.parse_args()
 
 def pointsAroundCentroid(c, p, l):
@@ -43,11 +44,12 @@ def checkTwoStrandsOverlap(d1, d2):
 	(s2, r2) = d2
 	return True if (diffOfStrands(s1, s2) <= (r1+r2)) else False
 
-def createCentroids(k, l):
+def createCentroids(k, l, p):
 	cList = []
-	diffRad = int(l/(k**(0.5)))
+	diffRad = round(l*1.0/k)
 	while(len(cList) < k):
-		newCentroid = (createStrand(l), random.randint(1, diffRad))
+		minR = max(math.ceil(math.log(p, l)), 1)
+		newCentroid = (createStrand(l), random.randint(minR, diffRad))
 		if (checkCentroids(cList, newCentroid)):
 			cList += [newCentroid]
 	return cList
@@ -67,14 +69,19 @@ def createStrand(l):
 
 def DNAGenerator(outfile, p, k, l):
 	o = open(outfile, "w+")
+	stem = outfile.split(".")[0]
+	oSolution = open(stem+"Sol.txt", "w+")
 	#create a list a centroids
-	cList = createCentroids(k, l)
+	cList = createCentroids(k, l, p)
 	#for each center, generates a set of points
 	for i in xrange(k):
 		strandsSet = pointsAroundCentroid(cList[i], p, l)
 		o.write(cList[i][0]+'\n')
+		oSolution.write(cList[i][0]+'\n')
 		for strand in strandsSet:
 			o.write(strand+'\n')
 	o.close()
+	oSolution.close()
 	return 42
-DNAGenerator(opts.output, opts.pValue, opts.kValue, opts.dLength)
+if __name__ == "__main__":
+	DNAGenerator(opts.output, opts.pValue, opts.kValue, opts.dLength)

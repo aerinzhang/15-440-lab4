@@ -102,4 +102,5 @@ def kMeans(k, e, i, o):
     fo.close()
      
 #kMeans(10, 0.0001, "dna.txt", "output.txt")
-kMeans(opts.k, opts.e, opts.input, opts.output)
+if __name__ == "__main__":
+    kMeans(opts.k, opts.e, opts.input, opts.output)

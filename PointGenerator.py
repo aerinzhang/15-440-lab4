@@ -8,7 +8,7 @@ optparser = optparse.OptionParser()
 optparser.add_option("-k", "--value-of-k", dest="kValue", type="int", help="number of clusters")
 optparser.add_option("-p", "--value-of-p", dest="pValue", type="int", help="number of data in a cluster")
 optparser.add_option("-o", "--output", dest="output", help="location of output file")
-optparser.add_option("-r", "--range", dest="range", default=10000, type="int", help="range of coordinates")
+optparser.add_option("-r", "--range", dest="range", default=1000000, type="int", help="range of coordinates")
 (opts, _) = optparser.parse_args()
 
 def createCentroids(k, r):
@@ -39,7 +39,7 @@ def checkCentroids(known, new):
 def pointsAroundCentroid(c, p):
 	pointSet = set()
 	((x, y), r) = c
-	while (len(pointSet) < p):
+	while (len(pointSet) < p-1):
 		angle = random.random()*(2*math.pi)
 		rad = random.random()*r
 		newPoint = (x+rad*math.sin(angle), y+rad*math.cos(angle))
@@ -48,15 +48,22 @@ def pointsAroundCentroid(c, p):
 
 def PointGenerator(outfile, p, k, r):
 	o = open(outfile, "w+")
+	stem = outfile.split(".")[0]
+	oSolution = open(stem+"Sol.txt", "w+")
 	# generate centroids list
 	cList = createCentroids(k, r)
 	for i in xrange(k):
 		#for each centroids, generate p data points
 		c = cList[i]
 		pSet = pointsAroundCentroid(c, p)
+		o.write("%f %f\n"%(c[0][0],c[0][1]))
+		oSolution.write("%f %f\n"%(c[0][0],c[0][1]))
 		while (len(pSet) != 0):
 			(x, y) = pSet.pop()
 			o.write("%f %f\n"%(x,y))
 	o.close()
+	oSolution.close()
 	return 42
-PointGenerator(opts.output, opts.pValue, opts.kValue, opts.range)
+
+if __name__ == "__main__":
+	PointGenerator(opts.output, opts.pValue, opts.kValue, opts.range)
