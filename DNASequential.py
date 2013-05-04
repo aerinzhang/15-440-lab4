@@ -91,7 +91,6 @@ def kMeans(k, e, i, o):
     oldCentroids = initialCentroids
     clusters = getClusters(strands, initialCentroids)
     newCentroids = getNewCentroids(clusters)
-    #print newCentroids
     while (diffCentroids(oldCentroids, newCentroids) > e):
         oldCentroids = copyOf(newCentroids)
         clusters = getClusters(strands, newCentroids)
