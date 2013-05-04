@@ -10,31 +10,6 @@ optparser.add_option("-o", "--output", dest="output", default="data/output.txt",
 optparser.add_option("-l", "--length-of-DNA", dest="dLength", default=20, type="int", help="length of DNA strand")
 (opts, _) = optparser.parse_args()
 
-def createCentroids(k, l):
-	cList = []
-	radius = int(r/(k**(0.5)))
-	while (len(cList) < k):
-		newCentroid = ((random.random()*r, random.random()*r),
-					int(random.random()*radius))
-		if (checkCentroids(cList, newCentroid)):
-			cList += [newCentroid]
-	return cList
-
-def checkTwoCentroids(c1, c2):
-	((x1, y1), r1) = c1
-	((x2, y2), r2) = c2
-	if (((x1-x2)**2 + (y1-y2)**2))**(0.5) <= r1+r2:
-		return False
-	else:
-		return True
-
-def checkCentroids(known, new):
-	for each in known:
-		#if two centroids are too close
-		if checkTwoCentroids(each, new):
-			return False
-	return True
-
 def pointsAroundCentroid(c, p):
 	pointSet = set()
 	((x, y), r) = c
@@ -45,21 +20,32 @@ def pointsAroundCentroid(c, p):
 		pointSet.add(newPoint)
 	return pointSet
 
-def similarityOfStrands(d1, d2):
-	sim = 0
+def diffOfStrands(d1, d2):
+	diff = 0
 	for i in xrange(len(d1)):
-		if (d1[i] == d2[i]):
-			sim += 1
-	return sim
+		if (d1[i] != d2[i]):
+			diff += 1
+	return diff
+
+def checkTwoStrands(d1, d2):
+	(s1, r1) = d1
+	(s2, r2) = d2
+	return False if (diffOfStrands(s1, s2) <= (r1+r2)) else True
 
 def createCentroids(k, l):
 	cList = []
-	diffRad = random.randint(1, l)
+	diffRad = int(l/(k**(0.5)))
 	while(len(cList) < k):
-		newCentroid = (createStrand(l), diffRad)
-		if ():
+		newCentroid = (createStrand(l), random.randint(1, diffRad))
+		if (checkCentroids(cList, newCentroid)):
 			cList += [newCentroid]
 	return cList
+
+def checkCentroids(known, new):
+	for each in known:
+		if (checkTwoStrands(each, new)):
+			return False
+	return True
 
 def createStrand(l):
 	bases = ["A", "C", "G", "T"]
@@ -69,6 +55,7 @@ def createStrand(l):
 	return ''.join(seq)
 
 	[bases[random.randint(0, 3)]]
+
 def DNAGenerator(outfile, p, k):
 	o = open(outfile, "w+")
 	for i in xrange(p*k):

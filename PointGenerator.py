@@ -11,7 +11,6 @@ optparser.add_option("-o", "--output", dest="output", help="location of output f
 optparser.add_option("-r", "--range", dest="range", default=10000, type="int", help="range of coordinates")
 (opts, _) = optparser.parse_args()
 
-
 def createCentroids(k, r):
 	cList = []
 	radius = int(r/(k**(0.5)))
@@ -46,8 +45,6 @@ def pointsAroundCentroid(c, p):
 		newPoint = (x+rad*math.sin(angle), y+rad*math.cos(angle))
 		pointSet.add(newPoint)
 	return pointSet
-
-
 
 def PointGenerator(outfile, p, k, r):
 	o = open(outfile, "w+")
