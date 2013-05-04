@@ -21,18 +21,18 @@ def createCentroids(k, r):
 			cList += [newCentroid]
 	return cList
 
-def checkTwoCentroids(c1, c2):
+def checkTwoCentroidsOverlap(c1, c2):
 	((x1, y1), r1) = c1
 	((x2, y2), r2) = c2
 	if (((x1-x2)**2 + (y1-y2)**2))**(0.5) <= r1+r2:
-		return False
-	else:
 		return True
+	else:
+		return False
 
 def checkCentroids(known, new):
 	for each in known:
 		#if two centroids are too close
-		if checkTwoCentroids(each, new):
+		if checkTwoCentroidsOverlap(each, new):
 			return False
 	return True
 

@@ -6,19 +6,30 @@ import random
 optparser = optparse.OptionParser()
 optparser.add_option("-k", "--value-of-k", dest="kValue", type="int", help="number of clusters")
 optparser.add_option("-p", "--value-of-p", dest="pValue", type="int", help="number of data in a cluster")
-optparser.add_option("-o", "--output", dest="output", default="data/output.txt", help="location of output file")
+optparser.add_option("-o", "--output", dest="output", default="output.txt", help="location of output file")
 optparser.add_option("-l", "--length-of-DNA", dest="dLength", default=20, type="int", help="length of DNA strand")
 (opts, _) = optparser.parse_args()
 
-def pointsAroundCentroid(c, p):
+def pointsAroundCentroid(c, p, l):
 	pointSet = set()
-	((x, y), r) = c
-	while (len(pointSet) < p):
-		angle = random.random()*(2*math.pi)
-		rad = random.random()*r
-		newPoint = (x+rad*math.sin(angle), y+rad*math.cos(angle))
+	(s, r) = c
+	while (len(pointSet) < p-1):
+		diff = random.randint(1, r)
+		newPoint = modifyCentroid(s, diff)
 		pointSet.add(newPoint)
 	return pointSet
+
+def modifyCentroid(s, n):
+	news = list(s)
+	s = list(s)
+	#modify i positions
+	bases = ["A", "C", "G", "T"]
+	while (diffOfStrands(news,s))!= n:
+		i = random.randint(0, len(s)-1)
+		gene = bases[(bases.index(s[i]) + random.randint(1,3))%4]
+		news[i] = gene
+	return ''.join(news)
+
 
 def diffOfStrands(d1, d2):
 	diff = 0
@@ -27,23 +38,25 @@ def diffOfStrands(d1, d2):
 			diff += 1
 	return diff
 
-def checkTwoStrands(d1, d2):
+def checkTwoStrandsOverlap(d1, d2):
 	(s1, r1) = d1
 	(s2, r2) = d2
-	return False if (diffOfStrands(s1, s2) <= (r1+r2)) else True
+	return True if (diffOfStrands(s1, s2) <= (r1+r2)) else False
 
 def createCentroids(k, l):
 	cList = []
 	diffRad = int(l/(k**(0.5)))
 	while(len(cList) < k):
 		newCentroid = (createStrand(l), random.randint(1, diffRad))
+		print "in-loop", newCentroid
+		print "cList", cList
 		if (checkCentroids(cList, newCentroid)):
 			cList += [newCentroid]
 	return cList
 
 def checkCentroids(known, new):
 	for each in known:
-		if (checkTwoStrands(each, new)):
+		if (checkTwoStrandsOverlap(each, new)):
 			return False
 	return True
 
@@ -54,12 +67,16 @@ def createStrand(l):
 		seq += [bases[random.randint(0, 3)]]
 	return ''.join(seq)
 
-	[bases[random.randint(0, 3)]]
-
-def DNAGenerator(outfile, p, k):
+def DNAGenerator(outfile, p, k, l):
 	o = open(outfile, "w+")
-	for i in xrange(p*k):
-		o.write(''.join(seq)+'\n')
+	#create a list a centroids
+	cList = createCentroids(k, l)
+	#for each center, generates a set of points
+	for i in xrange(k):
+		strandsSet = pointsAroundCentroid(cList[i], p, l)
+		o.write(cList[i][0]+'\n')
+		for strand in strandsSet:
+			o.write(strand+'\n')
 	o.close()
 	return 42
-DNAGenerator(opts.output, opts.pValue, opts.kValue)
+DNAGenerator(opts.output, opts.pValue, opts.kValue, opts.dLength)
