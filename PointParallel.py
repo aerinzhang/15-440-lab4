@@ -57,7 +57,7 @@ def run(k, e, i, o):
 	# each node then computes membership based on that centroids
 	# based on newmembership calculate new centroids 
 	if (rank == 0):
-		newCen = PS.getInitialCentroids(points[0:chunkSize], k)
+		newCen = PS.getInitialCentroids(points, k)#[0:chunkSize], k)
 	else:
 		newCen = None
 	newCen = comm.bcast(newCen, root=0)
@@ -66,16 +66,14 @@ def run(k, e, i, o):
 	allMembership = []
 	while(PS.diffCentroids(oldCen, newCen) > e):
 		oldCen = newCen[:]
-		if (rank == size - 1):
+		if (rank != size - 1):
 			chunk = points[rank*chunkSize:(rank+1)*chunkSize]
 		else:
 			chunk = points[rank*chunkSize:]
 		membership = assignMembership(chunk, newCen)
-		#if (rank == 0):
 		allMembers = comm.gather(membership, root=0)
 		#flatten the list of lists
 		if (rank == 0):
-		#allMembers = comm.scatter(allMembers, root=0)
 			allMembership = []
 			for member in allMembers:
 				allMembership.extend(member)
@@ -89,7 +87,7 @@ def run(k, e, i, o):
 			fo.write("%f %f\n" % (c[0], c[1]))
 		fo.close()
 	return 42
-	
+
 if __name__ == "__main__":
 	run(3, 0.0001, 'Pointk3p100000.txt', 'tst.txt')
 	#run(opts.k, opts.e, opts.input, opts.output)
