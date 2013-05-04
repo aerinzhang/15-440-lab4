@@ -89,5 +89,6 @@ def run(k, e, i, o):
 	return 42
 
 if __name__ == "__main__":
-	run(3, 0.0001, 'Pointk3p100000.txt', 'tst.txt')
+	import cProfile
+	cProfile.run("run(3, 0.0001, 'Pointk3p100000.txt', 'tst.txt')")
 	#run(opts.k, opts.e, opts.input, opts.output)
