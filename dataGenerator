@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#generate datasets using different k's and p's
+
+prange=100000
+krange=20
+DNAHeader="data/DNA"
+PointHeader="data/Point"
+k="k"
+p="p"
+txt=".txt"
+
+echo "Generating datasets..."
+for (( i=1; i<=$krange; i++ ))
+do 
+	echo "generating DNA datasets for k=$i"
+	for ((j=10; j<=$prange; j*=10))
+	do
+		python DNAGenerator.py -k $i -p $j -o $DNAHeader$k$i$p$j$txt
+	done
+done
+
+for (( i=1; i<=$krange; i++ ))
+do 
+	echo "generating 2D datasets for k=$i"
+	for ((j=10; j<=$prange; j*=10))
+	do
+		python PointGenerator.py -k $i -p $j -o $PointHeader$k$i$p$j$txt
+	done
+done
