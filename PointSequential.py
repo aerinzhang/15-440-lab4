@@ -17,7 +17,7 @@ def getInitialCentroids(points, k):
     ntries = int (2 + math.log(k))
     n = len(points)
     centroids = [points[random.randint(0, n-1)]]  
-    D       = [distance(point, centers[0])**2 for point in points] 
+    D       = [distance(point, centroids[0])**2 for point in points] 
     Dsum    = reduce (lambda x, y : x + y, D)  
     for _ in xrange(k - 1):  
         bestDsum = bestIdx = -1  
