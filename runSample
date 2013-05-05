@@ -1,0 +1,20 @@
+#!/bin/bash
+#run a sample data
+
+prange=1000
+kval=10
+DNAFile="data/DNAk5p1000.txt"
+DNAOut="result/DNAk5p1000.out"
+DNAOutPar="result-par/DNAk5p1000.out"
+PointFile="data/Pointk5p1000.txt"
+PointOut="result/Pointk5p1000.out"
+PointOutPar="result-par/Pointk5p1000.out"
+
+
+echo "Testing Point dataset k=5 size=5000 ..."
+python PointSequential.py -k $kval -e 0.0001 -i $PointFile -o $PointOut
+mpirun -n 8 python PointSequential.py -k $kval -e 0.0001 -i $PointFile -o $PointOutPar
+
+echo "Testing DNA dataset k=5 size=5000 ..."
+python DNASequential.py -k $kval -e 0.0001 -i $DNAFile -o $DNAOut
+mpirun -n 8 python DNAParallel.py -k $kval -e 0.0001 -i $DNAFile -o $DNAOutPar

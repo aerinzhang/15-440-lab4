@@ -1,0 +1,43 @@
+#!/bin/bash
+#run datasets using Parallel Algorithms
+
+prange=100000
+krange=10
+Point="Point"
+DNA="DNA"
+data="data/"
+result="result-par/"
+k="k"
+p="p"
+nump="np"
+txt=".txt"
+out=".out"
+
+echo "Running Point datasets ..."
+for (( i=2; i<=$krange; i++ ))
+do 
+	echo "runnig 2D datasets for k=$i"
+	for np in 2 4 8 12
+		do
+		for ((j=10; j<=$prange; j*=10 ))
+		do
+			total=$[$j*$i]
+			echo "running DNA with k=$i $total points using $np processors"
+			mpirun -n $np python PointParallel.py -k $i -e 0.0001 -i $data$Point$k$i$p$j$txt -o $result$Point$k$i$p$j$nump$np$out
+		done
+	done
+done
+echo "Running DNA datasets..."
+for (( i=2; i<=$krange; i++ ))
+do 
+	echo "running DNA datasets for k=$i"
+	for np in 2 4 8 12
+		do
+		for ((j=10; j<=$prange; j*=10 ))
+		do
+			total=$[$j*$i]
+			echo "running 2D-Point with k=$i on $total points using $np processors"
+			mpirun -n $np python DNAParallel.py -k $i -e 0.0001 -i $data$DNA$k$i$p$j$txt -o $result$DNA$k$i$p$j$nump$np$out
+		done
+	done
+done
